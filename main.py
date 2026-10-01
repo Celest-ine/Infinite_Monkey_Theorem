@@ -24,7 +24,7 @@ def generate_string(the_phrase):
     
     return random_generation
 
-def score_generated_strings(the_phrase, generated_phrase):
+def score_generated_strings(the_phrase):
     """Score the generated strings aganist the random string."""
 
     attempts = 0
@@ -41,7 +41,7 @@ def score_generated_strings(the_phrase, generated_phrase):
             end_time = time.time()
             print(f"\nSuccess after {attempts} generations.")
             print(f"The generated phrase is: {generated_phrase}")
-            print(f"Time taken is: ({end_time - start_time:.4f} seconds.")
+            print(f"Time taken is: {end_time - start_time:.4f} seconds.")
             break
 
         elif attempts % 1000 == 0: # Print the score every 1000 attempts
@@ -51,4 +51,4 @@ def score_generated_strings(the_phrase, generated_phrase):
 
 the_phrase = get_targeted_string()
 generated_phrase = generate_string(the_phrase)
-score_generated_strings(the_phrase, generated_phrase)
+score_generated_strings(the_phrase)
