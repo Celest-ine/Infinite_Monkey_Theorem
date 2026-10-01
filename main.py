@@ -7,6 +7,12 @@ import random
 import string
 import time
 
+ALLOWED_CHARACTERS = (
+    string.ascii_letters
+    + string.digits
+    + string.punctuation
+    + " "
+)
 
 def get_targeted_string():
     """Get a string from the user."""
@@ -18,7 +24,18 @@ def get_targeted_string():
         + "*" * 5
     )
 
-    phrase = input("What phrase/word do you want the monkey to generate? ")
+    while True:
+        phrase = (input("What phrase/word do you want the monkey to generate? ").strip())
+        
+        if len(phrase)== 0:
+            raise ValueError("The phrase cannot be empty. Please enter a valid phrase.")
+        elif len(phrase) > 0:
+            for char in phrase:
+                if char not in ALLOWED_CHARACTERS:
+                    raise ValueError(
+                        "The phrase contains invalid characters. Please use only letters, digits, punctuation, and spaces."
+                    )
+        break
 
     return phrase
 
@@ -26,7 +43,7 @@ def get_targeted_string():
 def generate_string(the_phrase, current_phrase):
     """Generate a new phrase while keeping characters that are already correct."""
 
-    characters = string.ascii_letters + string.punctuation + " "
+    characters = ALLOWED_CHARACTERS
     new_phrase = []
 
     for target_char, current_char in zip(the_phrase, current_phrase):
@@ -48,7 +65,7 @@ def score_generated_strings(the_phrase):
     start_time = time.time()
 
     # Start with a completely random phrase.
-    characters = string.ascii_letters + string.punctuation + " "
+    characters = ALLOWED_CHARACTERS
     current_phrase = "".join(
         random.choice(characters) for _ in range(len(the_phrase))
     )
