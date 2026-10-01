@@ -40,13 +40,13 @@ def score_generated_strings(the_phrase):
         score = (matches / len(the_phrase)) * 100
 
         if score > best_score: # If the score is better than the previous score, update the best score and best phrase
-                    best_score = score
-                    best_phrase = generated_phrase
+            best_score = score
+            best_phrase = generated_phrase
 
         if score == 100: # If we have a match, breakthe loop and print the results
             end_time = time.time()
             print(f"\nSuccess after {attempts} generations.")
-            print(f"The generated phrase is: {generated_phrase}")
+            print(f"The generated phrase is: {best_phrase}")
             print(f"Time taken is: {end_time - start_time:.4f} seconds.")
             break
 
@@ -56,5 +56,4 @@ def score_generated_strings(the_phrase):
 
 
 the_phrase = get_targeted_string()
-generated_phrase = generate_string(the_phrase)
 score_generated_strings(the_phrase)
