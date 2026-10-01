@@ -1,58 +1,77 @@
-"""The infinite monkey theorem states that a monkey hitting keys at random on a typewriter keyboard for an infinite amount of time will almost surely type any given text,
-such as the complete works of William Shakespeare.
+"""The infinite monkey theorem states that a monkey hitting keys at random on a
+typewriter keyboard for an infinite amount of time will almost surely type any
+given text, such as the complete works of William Shakespeare.
 """
+
 import random
 import string
 import time
 
-def get_targeted_string():
-    """Get a string from the user"""
-    print("*" * 5 + "This program will tell you how long it would take a monkey to type some words if the monkey was playing with random keyboard keys." + "*" * 5)
 
-    phrase = input("What phrase/word do you want the monkey to generate?")
+def get_targeted_string():
+    """Get a string from the user."""
     
+    print(
+        "*" * 5
+        + " This program will tell you how long it would take a monkey "
+          "to type some words if the monkey was playing with random keyboard keys. "
+        + "*" * 5
+    )
+
+    phrase = input("What phrase/word do you want the monkey to generate? ")
+
     return phrase
 
 
-def generate_string(the_phrase):
-    """Generate a string that is as long as the string that the user typed in, 
-    by choosing random letters from alphabets
-    """
+def generate_string(the_phrase, current_phrase):
+    """Generate a new phrase while keeping characters that are already correct."""
 
-    phrase_length = len(the_phrase)
-    random_generation = "".join(random.choice(string.ascii_letters + string.punctuation + " ") for _ in range(phrase_length)) # add punctuation and space to the random generation
-    
-    return random_generation
+    characters = string.ascii_letters + string.punctuation + " "
+    new_phrase = []
+
+    for target_char, current_char in zip(the_phrase, current_phrase):
+
+        if target_char == current_char:
+            # Keep characters that are already correct.
+            new_phrase.append(current_char)
+        else:
+            # Generate a new random character for incorrect positions.
+            new_phrase.append(random.choice(characters))
+
+    return "".join(new_phrase)
+
 
 def score_generated_strings(the_phrase):
-    """Score the generated strings aganist the random string."""
+    """Generate strings until every character matches the target."""
 
     attempts = 0
     start_time = time.time()
-    best_score = 0
-    best_phrase = ""
+
+    # Start with a completely random phrase.
+    characters = string.ascii_letters + string.punctuation + " "
+    current_phrase = "".join(
+        random.choice(characters) for _ in range(len(the_phrase))
+    )
 
     while True:
-        generated_phrase = generate_string(the_phrase)
         attempts += 1
 
-        matches = sum(1 for char1, char2 in zip(generated_phrase, the_phrase) if char1 == char2)
+        current_phrase = generate_string(the_phrase, current_phrase)
+
+        matches = sum(1 for char1, char2 in zip(current_phrase, the_phrase) if char1 == char2)
         score = (matches / len(the_phrase)) * 100
 
-        if score > best_score: # If the score is better than the previous score, update the best score and best phrase
-            best_score = score
-            best_phrase = generated_phrase
-
-        if score == 100: # If we have a match, breakthe loop and print the results
+        if score == 100:
             end_time = time.time()
+
             print(f"\nSuccess after {attempts} generations.")
-            print(f"The generated phrase is: {best_phrase}")
+            print(f"The generated phrase is: {current_phrase}")
             print(f"Time taken is: {end_time - start_time:.4f} seconds.")
             break
 
-        elif attempts % 1000 == 0: # Print the score every 1000 attempts
-            print(f"\nAttempts: {attempts}, Score: {best_score:.2f}%")
-            print(f"The best generated phrase is: {best_phrase}")
+        elif attempts % 100 == 0:
+            print(f"\nAttempts: {attempts}, Score: {score:.2f}%")
+            print(f"The best generated phrase is: {current_phrase}")
 
 
 the_phrase = get_targeted_string()
