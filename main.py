@@ -20,7 +20,7 @@ def generate_string(the_phrase):
     """
 
     phrase_length = len(the_phrase)
-    random_generation = "".join(random.choice(string.ascii_letters) for _ in range(phrase_length))
+    random_generation = "".join(random.choice(string.ascii_letters + string.punctuation + " ") for _ in range(phrase_length)) # add punctuation and space to the random generation
     
     return random_generation
 
